@@ -16,7 +16,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+
+Route::get('/result', function () {
+    return view('result');
+})->name('result');
+
+Route::get('/recover-password', function () {
+    return view('auth.recoverpw');
+})->name('recover-password');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
