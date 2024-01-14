@@ -14,21 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
 Route::get('/result', function () {
     return view('result');
-})->name('result');
-
-Route::get('/recover-password', function () {
-    return view('auth.recoverpw');
-})->name('recover-password');
-
+})->middleware(['auth', 'verified'])->name('result');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('welcome');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

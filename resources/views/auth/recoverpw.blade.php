@@ -41,20 +41,20 @@
 @extends('layouts.app')
 
 @section('content')
-    
+
 <div class="wrapper">
     <section class="login-content">
        <div class="row m-0 align-items-center bg-white vh-100">
           <div class="col-md-6 d-md-block d-none bg-primary p-0 mt-n1 vh-100 overflow-hidden">
              <img src="{{asset('images/auth/02.png')}}" class="img-fluid gradient-main animated-scaleX" alt="images">
           </div>
-          <div class="col-md-6 p-0">               
+          <div class="col-md-6 p-0">
              <div class="card card-transparent auth-card shadow-none d-flex justify-content-center mb-0">
                 <div class="card-body">
-                   <a href="../../dashboard/index.html" class="navbar-brand d-flex align-items-center mb-3">
+                   <a href="{{ route('login') }}" class="navbar-brand d-flex align-items-center mb-3">
                       <!--Logo start-->
                       <!--logo End-->
-                      
+
                       <!--Logo start-->
                       <div class="logo-main">
                           <div class="logo-normal">
@@ -65,10 +65,7 @@
                           </div>
                       </div>
                       <!--logo End-->
-                      
-                      
-                      
-                      
+
                       <h4 class="logo-title ms-3">Admin</h4>
                    </a>
                    <h2 class="mb-2">Reset Password</h2>
@@ -90,7 +87,7 @@
                       <button type="submit" class="btn btn-primary">Reset</button>
                    </form>
                 </div>
-             </div>               
+             </div>
              <div class="sign-bg sign-bg-right">
                 <svg width="280" height="230" viewBox="0 0 431 398" fill="none" xmlns="http://www.w3.org/2000/svg">
                    <g opacity="0.05">
@@ -105,5 +102,5 @@
        </div>
     </section>
     </div>
-    
+
 @endsection

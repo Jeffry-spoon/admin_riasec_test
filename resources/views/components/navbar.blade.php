@@ -4,7 +4,7 @@
             <a href="../dashboard/index.html" class="navbar-brand">
                 <!--Logo start-->
                 <!--logo End-->
-                
+
                 <!--Logo start-->
                 <div class="logo-main">
                     <div class="logo-normal">
@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <!--logo End-->
-                
+
                 <h4 class="logo-title">Admin</h4>
             </a>
             <div class="sidebar-toggle" data-toggle="sidebar" data-active="true">
@@ -40,16 +40,21 @@
                   <a class="py-0 nav-link d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{{asset('images/avatars/01.png')}}" alt="User-Profile" class="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded">
                     <div class="caption ms-3 d-none d-md-block ">
-                        <h6 class="mb-0 caption-title">Austin</h6>
+                        <h6 class="mb-0 caption-title">{{ auth()->user()->name }}</h6>
                         <p class="mb-0 caption-sub-title">Admin</p>
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="../dashboard/auth/sign-in.html">Logout</a></li>
+                    <li>
+                        <form action="/logout" method="post">
+                            @csrf
+                            <button type="submit" class="dropdown-item">Logout</button>
+                        </form>
+                    </li>
                   </ul>
                 </li>
               </ul>
             </div>
           </div>
         <!-- Nav Header Component Start -->
-        </nav>  
+        </nav>

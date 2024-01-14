@@ -20,7 +20,18 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
 
+    Route::get('/', function() {
+        return redirect('/login');
+    });
+
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy']);
+
+//     Route::get('/recover-password', function () {
+//     return view('auth.recoverpw');
+// })->name('recover-password');
+
+
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
                 ->name('password.request');
