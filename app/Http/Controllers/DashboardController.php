@@ -22,39 +22,34 @@ class DashboardController extends Controller
     // Calculate the difference in days from today to the cutoff day
     $daysUntilCutoff = ($today->dayOfWeek - $cutOffDay + 7) % 7;
 
-    // Calculate the start and end date of the current cutoff week
-    $startOfWeek = $today->copy()->subDays($daysUntilCutoff)->startOfWeek(Carbon::SUNDAY);
-    $endOfWeek = $today->copy()->subDays($daysUntilCutoff)->endOfWeek(Carbon::SATURDAY);
+    $startOfWeek = Carbon::now()->startOfWeek(Carbon::SUNDAY); // Sunday
+    $endOfWeek = Carbon::now()->endOfWeek(Carbon::SATURDAY); // Saturday
 
     // Format date
     $formattedStartOfWeek = $startOfWeek->format('Y-m-d H:i:s');
     $formattedEndOfWeek = $endOfWeek->format('Y-m-d H:i:s');
 
-    $results = DB::table('users')
-        ->where('users.is_admin', false)
-        ->leftJoin('results', function ($join) use ($formattedStartOfWeek, $formattedEndOfWeek) {
-            $join->on('users.id', '=', 'results.user_id')
-                ->whereBetween('results.created_at', [$formattedStartOfWeek, $formattedEndOfWeek]);
-        })
-        ->join('users_details', 'users.id', '=', 'users_details.user_id')
-        ->select(
-            'users.id',
-            'users.name',
-            'users.email',
-            'users_details.education_level',
-            'users_details.gender',
-            'users_details.phone_number',
-            'users_details.school_name',
-            'users_details.occupation_desc',
-            'results.types_id',
-            'results.score',
-            'results.created_at'
-            )
-        ->get();
+    $resultsSummary = DB::table('users')
+    ->join('results', 'users.id', '=', 'results.user_id')
+    ->join('users_details', 'users.id', '=', 'users_details.user_id')
+    ->whereBetween('results.created_at', [$formattedStartOfWeek, $formattedEndOfWeek])
+    ->select(
+        'users.name',
+        'users.email',
+        'users_details.education_level',
+        'users_details.gender',
+        'users_details.phone_number',
+        'users_details.school_name',
+        'users_details.occupation_desc',
+        'results.types_id',
+        'results.score',
+        'results.created_at'
+    )
+    ->get();
 
-    dd($results);
+    $countResults = $resultsSummary->count();
 
-    return view('welcome');
+    return view('welcome', compact('resultsSummary', 'countResults', 'formattedEndOfWeek', 'formattedStartOfWeek'));
     }
 
     /**
