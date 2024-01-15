@@ -29,6 +29,7 @@ class DashboardController extends Controller
     $formattedStartOfWeek = $startOfWeek->format('Y-m-d H:i:s');
     $formattedEndOfWeek = $endOfWeek->format('Y-m-d H:i:s');
 
+    // result every week
     $resultsSummary = DB::table('users')
     ->join('results', 'users.id', '=', 'results.user_id')
     ->join('users_details', 'users.id', '=', 'users_details.user_id')
@@ -49,7 +50,26 @@ class DashboardController extends Controller
 
     $countResults = $resultsSummary->count();
 
-    return view('welcome', compact('resultsSummary', 'countResults', 'formattedEndOfWeek', 'formattedStartOfWeek'));
+    // total result
+    // $totalResult = DB::table('results')
+    // ->count();
+    $totalResult = 100000;
+    $total_format = number_format($totalResult, 0, ',', '.');
+
+    // total user
+    $totalUser = DB::table('users')
+    ->where('is_admin', false)
+    ->count();
+
+    return view('welcome',
+    compact(
+        'resultsSummary',
+        'countResults',
+        'formattedEndOfWeek',
+        'formattedStartOfWeek',
+        'total_format',
+        'totalUser'
+    ));
     }
 
     /**
@@ -59,6 +79,7 @@ class DashboardController extends Controller
     {
         //
     }
+    
 
     /**
      * Store a newly created resource in storage.

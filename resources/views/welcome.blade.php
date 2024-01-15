@@ -113,13 +113,13 @@
               <div class="card" data-aos="fade-up" data-aos-delay="500">
                  <div class="text-center card-body d-flex justify-content-around">
                     <div>
-                       <h2 class="mb-2">750<small>K</small></h2>
-                       <p class="mb-0 text-gray">Website Visitors</p>
+                       <h2 class="mb-2">{{ $total_format }}</h2>
+                       <p class="mb-0 text-gray">Total Pengerjaan </p>
                     </div>
                     <hr class="hr-vertial">
                     <div>
-                       <h2 class="mb-2">7,500</h2>
-                       <p class="mb-0 text-gray">New Customers</p>
+                       <h2 class="mb-2">{{ $totalUser }}</h2>
+                       <p class="mb-0 text-gray">Total Peserta</p>
                     </div>
                  </div>
               </div>
