@@ -51,10 +51,8 @@ class DashboardController extends Controller
     $countResults = $resultsSummary->count();
 
     // total result
-    // $totalResult = DB::table('results')
-    // ->count();
-    $totalResult = 100000;
-    $total_format = number_format($totalResult, 0, ',', '.');
+    $totalResult = DB::table('results')
+    ->count();
 
     // total user
     $totalUser = DB::table('users')
@@ -67,7 +65,7 @@ class DashboardController extends Controller
         'countResults',
         'formattedEndOfWeek',
         'formattedStartOfWeek',
-        'total_format',
+        'totalResult',
         'totalUser'
     ));
     }
@@ -79,7 +77,7 @@ class DashboardController extends Controller
     {
         //
     }
-    
+
 
     /**
      * Store a newly created resource in storage.

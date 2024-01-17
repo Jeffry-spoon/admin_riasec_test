@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ResultController extends Controller
 {
@@ -35,6 +37,10 @@ class ResultController extends Controller
     ->get();
 
         return view('result', compact('results'));
+    }
+
+    public function exportExcel () {
+        return Excel::download(new ExportResult, "RiasecResult.xlsx");
     }
 
     /**
