@@ -2,15 +2,16 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\View\View;
 
-class ExportResult implements FromCollection
+class ExportResult implements FromView
 {
     /**
     * @return \Illuminate\Support\Collection\
     */
-    public function collection()
+    public function view():View
     {
         $results = DB::table('users')
     ->where('users.is_admin', false)
@@ -32,6 +33,6 @@ class ExportResult implements FromCollection
     ->orderBy('results.created_at', 'desc') // Order by formatted datetime
     ->get();
 
-    return $results;
+    return view('components.table.resultTable', ['results' => $results]);
     }
 }

@@ -61,7 +61,7 @@ class DashboardController extends Controller
     ->where('is_admin', false)
     ->count();
 
-    return view('welcome',
+    return view('dashboard',
     compact(
         'resultsSummary',
         'countResults',

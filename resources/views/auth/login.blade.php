@@ -1,3 +1,4 @@
+
 @extends('layouts.app') @section('content')
 
 <div class="wrapper">
@@ -83,7 +84,7 @@
                                             class="col-lg-12 d-flex justify-content-between"
                                         >
                                             <div class="form-check mb-3"></div>
-                                            <a href="recoverpw.html"
+                                            <a href="{{ route('password.request') }}"
                                                 >Forgot Password?</a
                                             >
                                         </div>
