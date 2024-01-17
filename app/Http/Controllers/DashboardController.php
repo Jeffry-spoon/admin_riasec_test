@@ -51,9 +51,9 @@ class DashboardController extends Controller
     $countResults = $resultsSummary->count();
 
     // total result
-    // $totalResult = DB::table('results')
-    // ->count();
-    $totalResult = 100000;
+    $totalResult = DB::table('results')
+    ->count();
+    // $totalResult = 100000;
     $total_format = number_format($totalResult, 0, ',', '.');
 
     // total user
@@ -67,6 +67,7 @@ class DashboardController extends Controller
         'countResults',
         'formattedEndOfWeek',
         'formattedStartOfWeek',
+        'totalResult',
         'total_format',
         'totalUser'
     ));
