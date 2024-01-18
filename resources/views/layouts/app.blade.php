@@ -33,7 +33,7 @@
   </head>
   <body class="  ">
 
-    @if (\Route::currentRouteName() === 'login' ||\Route::currentRouteName() === 'password.request')
+    @if (\Route::currentRouteName() === 'login' ||\Route::currentRouteName() === 'password.request' ||\Route::currentRouteName() === 'success-confirm')
         @yield('content')
     @else
         @include('components.sidebar')
