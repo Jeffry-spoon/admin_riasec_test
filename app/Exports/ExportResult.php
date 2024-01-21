@@ -35,4 +35,6 @@ class ExportResult implements FromView
 
     return view('components.table.resultTable', ['results' => $results]);
     }
+
+    
 }

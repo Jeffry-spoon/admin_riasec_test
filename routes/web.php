@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuizCategoryController;
 use App\Http\Controllers\ResultController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard.index');
 
 Route::get('/result', [ResultController::class, 'index'])->name('result.index');
+Route::get('/result/export/excel', [ResultController::class, 'exportExcel']);
+
+Route::get('/quiz', [QuizCategoryController::class, 'index'])->name('quiz.index');
 });
 
 

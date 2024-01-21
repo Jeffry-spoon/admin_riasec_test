@@ -38,7 +38,7 @@ class ResultController extends Controller
 
         return view('result', compact('results'));
     }
-
+    
     public function exportExcel () {
         return Excel::download(new ExportResult, "RiasecResult.xlsx");
     }
