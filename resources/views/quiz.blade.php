@@ -101,9 +101,8 @@
                                                                  </svg>
                                                              </span>
                                                          </a>
-                                                         <a class="btn btn-sm btn-icon btn-danger"
-                                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                                             title="Delete" href="#">
+                                                         <a class="btn btn-sm btn-icon btn-danger" data-bs-toggle="tooltip"
+                                                             data-bs-placement="top" title="Delete" href="#">
                                                              <span class="btn-inner">
                                                                  <svg class="icon-20" width="20" viewBox="0 0 24 24"
                                                                      fill="none" xmlns="http://www.w3.org/2000/svg"

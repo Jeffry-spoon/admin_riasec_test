@@ -80,75 +80,82 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($resultsSummary as $result)
-                                                  
-                                                    <tr>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <h6>
-                                                                    {{ $result->name }}
-                                                                </h6>
-                                                            </div>
-                                                        </td>
-                                                        @php
-                                                        $score = json_decode($result->score, true); @endphp
-                                                        @if (isset($score['REALISTIC']))
-                                                            <td>{{ $score['REALISTIC'] }}</td>
-                                                        @elseif(isset($score['R']))
-                                                            <td>{{ $score['R'] }}</td>
-                                                        @else
-                                                            <td>N/A</td>
-                                                        @endif
+                                                @if (count($resultsSummary) > 0)
+                                                    @foreach ($resultsSummary as $result)
+                                                        <tr>
+                                                            <td>
+                                                                <div class="d-flex align-items-center">
+                                                                    <h6>
+                                                                        {{ $result->name }}
+                                                                    </h6>
+                                                                </div>
+                                                            </td>
+                                                            @php
+                                                            $score = json_decode($result->score, true); @endphp
+                                                            @if (isset($score['REALISTIC']))
+                                                                <td>{{ $score['REALISTIC'] }}</td>
+                                                            @elseif(isset($score['R']))
+                                                                <td>{{ $score['R'] }}</td>
+                                                            @else
+                                                                <td>N/A</td>
+                                                            @endif
 
-                                                        @if (isset($score['INVESTIGATIVE']))
-                                                            <td>{{ $score['INVESTIGATIVE'] }}</td>
-                                                        @elseif(isset($score['I']))
-                                                            <td>{{ $score['I'] }}</td>
-                                                        @else
-                                                            <td>N/A</td>
-                                                        @endif
-                                                        @if (isset($score['ARTISTIC']))
-                                                            <td>{{ $score['ARTISTIC'] }}</td>
-                                                        @elseif(isset($score['A']))
-                                                            <td>{{ $score['A'] }}</td>
-                                                        @else
-                                                            <td>N/A</td>
-                                                        @endif
-                                                        @if (isset($score['SOCIAL']))
-                                                            <td>{{ $score['SOCIAL'] }}</td>
-                                                        @elseif(isset($score['S']))
-                                                            <td>{{ $score['S'] }}</td>
-                                                        @else
-                                                            <td>N/A</td>
-                                                        @endif
-                                                        @if (isset($score['ENTERPRISING']))
-                                                            <td>{{ $score['ENTERPRISING'] }}</td>
-                                                        @elseif(isset($score['E']))
-                                                            <td>{{ $score['E'] }}</td>
-                                                        @else
-                                                            <td>N/A</td>
-                                                        @endif
-                                                        @if (isset($score['CONVENTIONAL']))
-                                                            <td>{{ $score['CONVENTIONAL'] }}</td>
-                                                        @elseif(isset($score['C']))
-                                                            <td>{{ $score['C'] }}</td>
-                                                        @else
-                                                            <td>N/A</td>
-                                                        @endif
-                                                        <td>
-                                                            {{ \Carbon\Carbon::parse($result->created_at)->format('Y-m-d H:i') }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $result->email }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $result->phone_number }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $result->school_name }}
-                                                        </td>
+                                                            @if (isset($score['INVESTIGATIVE']))
+                                                                <td>{{ $score['INVESTIGATIVE'] }}</td>
+                                                            @elseif(isset($score['I']))
+                                                                <td>{{ $score['I'] }}</td>
+                                                            @else
+                                                                <td>N/A</td>
+                                                            @endif
+                                                            @if (isset($score['ARTISTIC']))
+                                                                <td>{{ $score['ARTISTIC'] }}</td>
+                                                            @elseif(isset($score['A']))
+                                                                <td>{{ $score['A'] }}</td>
+                                                            @else
+                                                                <td>N/A</td>
+                                                            @endif
+                                                            @if (isset($score['SOCIAL']))
+                                                                <td>{{ $score['SOCIAL'] }}</td>
+                                                            @elseif(isset($score['S']))
+                                                                <td>{{ $score['S'] }}</td>
+                                                            @else
+                                                                <td>N/A</td>
+                                                            @endif
+                                                            @if (isset($score['ENTERPRISING']))
+                                                                <td>{{ $score['ENTERPRISING'] }}</td>
+                                                            @elseif(isset($score['E']))
+                                                                <td>{{ $score['E'] }}</td>
+                                                            @else
+                                                                <td>N/A</td>
+                                                            @endif
+                                                            @if (isset($score['CONVENTIONAL']))
+                                                                <td>{{ $score['CONVENTIONAL'] }}</td>
+                                                            @elseif(isset($score['C']))
+                                                                <td>{{ $score['C'] }}</td>
+                                                            @else
+                                                                <td>N/A</td>
+                                                            @endif
+                                                            <td>
+                                                                {{ \Carbon\Carbon::parse($result->created_at)->format('Y-m-d H:i') }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $result->email }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $result->phone_number }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $result->school_name }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @else
+                                                    <tr>
+                                                        <td colspan="12" class="text-center text-black-50">Tidak ada test yang dikerjakan
+                                                            minggu ini untuk sementara</td>
                                                     </tr>
-                                                @endforeach
+                                                @endif
+
                                             </tbody>
                                         </table>
                                     </div>

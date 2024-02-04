@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BreadcrumbController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizCategoryController;
@@ -23,14 +24,22 @@ Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard.
 Route::get('/result', [ResultController::class, 'index'])->name('result.index');
 Route::get('/result/export/excel', [ResultController::class, 'exportExcel']);
 
-Route::get('/quiz', [QuizCategoryController::class, 'index'])->name('quiz.index');
+//  Questions mnenu
+Route::get('/quiz/questions', [QuizCategoryController::class, 'index'])->name('questions.index');
+
+// Categories menu
+Route::get('/categories', [QuizCategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/{slug}', [QuizCategoryController::class, 'edit'])->name('categories.edit');
+Route::post('/categories/{slug}', [QuizCategoryController::class, 'update'])->name('categories.update');
+
+
 });
 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
 require __DIR__.'/auth.php';
