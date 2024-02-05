@@ -24,9 +24,9 @@
                                                     data-bs-toggle="data-table">
                                                     <thead>
                                                         <tr class="ligth">
-                                                            <th>Category</th>
+                                                            <th>Title</th>
                                                             <th style="max-width: 200px;">Description</th>
-                                                            <th>Created by</th>
+                                                            <th>Last Modified</th>
                                                             <th>Created at</th>
                                                             <th>Updated at</th>
                                                             <th style="min-width: 100px">Action</th>

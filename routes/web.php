@@ -4,6 +4,7 @@ use App\Http\Controllers\BreadcrumbController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizCategoryController;
+use App\Http\Controllers\QuizDetailController;
 use App\Http\Controllers\ResultController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,7 @@ Route::get('/result', [ResultController::class, 'index'])->name('result.index');
 Route::get('/result/export/excel', [ResultController::class, 'exportExcel']);
 
 //  Questions mnenu
-Route::get('/quiz/questions', [QuizCategoryController::class, 'index'])->name('questions.index');
+Route::get('/quiz/questions', [QuizDetailController::class, 'index'])->name('questions.index');
 
 // Categories menu
 Route::get('/categories', [QuizCategoryController::class, 'index'])->name('categories.index');
