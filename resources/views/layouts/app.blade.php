@@ -92,6 +92,7 @@
     <script src="{{ asset('js/hope-ui.js') }}"></script>
     {{-- <script src="../assets/js/hope-ui.js" defer></script> --}}
 
+
 </body>
 
 </html>

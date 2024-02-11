@@ -26,12 +26,18 @@ Route::get('/result', [ResultController::class, 'index'])->name('result.index');
 Route::get('/result/export/excel', [ResultController::class, 'exportExcel']);
 
 //  Questions mnenu
-Route::get('/quiz/questions', [QuizDetailController::class, 'index'])->name('questions.index');
+Route::post('/quiz/quizess&surveys/Add', [QuizDetailController::class, 'store'])->name('questions.store');
+Route::get('/quiz/quizess&surveys/Add', [QuizDetailController::class, 'create'])->name('questions.create');
+Route::get('/quiz/quizess&surveys/Edit-{slug}', [QuizDetailController::class, 'edit'])->name('questions.edit');
+Route::post('/quiz/quizess&surveys/Edit-{slug}', [QuizDetailController::class, 'update'])->name('questions.update');
+Route::get('/quiz/quizess&surveys/Drop-{slug}', [QuizDetailController::class, 'destroy'])->name('questions.destroy');
+Route::get('/quiz/quizess&surveys', [QuizDetailController::class, 'index'])->name('questions.index');
+
 
 // Categories menu
-Route::get('/categories', [QuizCategoryController::class, 'index'])->name('categories.index');
-Route::get('/categories/{slug}', [QuizCategoryController::class, 'edit'])->name('categories.edit');
-Route::post('/categories/{slug}', [QuizCategoryController::class, 'update'])->name('categories.update');
+Route::get('/quiz/categories', [QuizCategoryController::class, 'index'])->name('categories.index');
+Route::get('/quiz/categories/{slug}', [QuizCategoryController::class, 'edit'])->name('categories.edit');
+Route::post('/quiz/categories/{slug}', [QuizCategoryController::class, 'update'])->name('categories.update');
 
 
 });

@@ -28,7 +28,7 @@ class QuizCategoryController extends Controller
 
             $category->username = $user->name;
         }
-        return view('questions/data-category', compact('categories'));
+        return view('surveys/category/data-category', compact('categories'));
     }
 
     /**
@@ -64,11 +64,9 @@ class QuizCategoryController extends Controller
         ->where('slug', $slug)
         ->first();
 
-        // $jobsData = DB::table('jobs')
-        // ->where('categories_id', $id)
-        // ->get();
 
-        return view('questions/edit-category', compact('data'));
+
+        return view('surveys/category/edit-category', compact('data'));
 
     }
 
@@ -102,8 +100,10 @@ class QuizCategoryController extends Controller
             ->where('slug', $slug)
             ->first();
 
+        session()->flash('alert', ['type' => 'success', 'message' => 'Your Data is Updated']);
+
         if ($dataCat > 0) {
-            return view('questions/edit-category', compact('data'));
+            return redirect()->route('categories.index');
         } else {
             return view('errors.500');
         }

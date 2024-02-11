@@ -10,7 +10,7 @@
                         <div class="flex-wrap d-flex justify-content-between align-items-center">
                             <div>
                                 @include('components.breadcrumbs')
-                                <h1>{{ $data->category_text }}</h1>
+                                <h3>{{ $data->category_text }}</h3>
                             </div>
                         </div>
                     </div>
@@ -22,7 +22,11 @@
             </div>
         </div>
 
-        <div class="conatiner-fluid content-inner py-0">
+        <div class="conatiner-fluid content-inner mt-n2 py-0">
+            @if (session('success'))
+            <x-alert type="success" :message="session('success')" />
+            @endif
+
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -47,7 +51,7 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
                             </form>
                         </div>
                     </div>

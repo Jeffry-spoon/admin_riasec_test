@@ -7,6 +7,9 @@
         <div class="conatiner-fluid content-inner mt-4 py-0">
             <div class="row" style="margin-top: 60px">
                 <div class="col-sm-12">
+                    @if (session('alert'))
+                        <x-alert :type="session('alert')['type']" :message="session('alert')['message']" />
+                    @endif
                     <div class="card">
                         <div class="card-header">
                             <div class="header-title d-flex align-items-center justify-content-between">
@@ -39,14 +42,15 @@
                                                         @foreach ($categories as $category)
                                                             <tr>
                                                                 <td>{{ $category->category_text }}</td>
-                                                                <td class="w-50 text-wrap text-truncate" style="max-height: 3.6rem;">{!! nl2br(e($category->description)) !!}</td>
+                                                                <td class="w-50 text-wrap text-truncate"
+                                                                    style="max-height: 3.6rem;">{!! nl2br(e($category->description)) !!}</td>
                                                                 <td>{{ $category->username }}</td>
                                                                 <td>{{ $category->created_at }}</td>
                                                                 <td>
                                                                     @if ($category->updated_at == $category->created_at)
-                                                                       -
+                                                                        -
                                                                     @else
-                                                                        {{ $category->updated_at}}
+                                                                        {{ $category->updated_at }}
                                                                     @endif
                                                                 </td>
                                                                 <td>
