@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizCategoryController;
 use App\Http\Controllers\QuizDetailController;
+use App\Http\Controllers\QuizEventController;
 use App\Http\Controllers\ResultController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,7 @@ Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard.
 Route::get('/result', [ResultController::class, 'index'])->name('result.index');
 Route::get('/result/export/excel', [ResultController::class, 'exportExcel']);
 
-//  Questions mnenu
+//  Questions menu
 Route::post('/quiz/quizess&surveys/Add', [QuizDetailController::class, 'store'])->name('questions.store');
 Route::get('/quiz/quizess&surveys/Add', [QuizDetailController::class, 'create'])->name('questions.create');
 Route::get('/quiz/quizess&surveys/Edit-{slug}', [QuizDetailController::class, 'edit'])->name('questions.edit');
@@ -39,7 +40,10 @@ Route::get('/quiz/categories', [QuizCategoryController::class, 'index'])->name('
 Route::get('/quiz/categories/{slug}', [QuizCategoryController::class, 'edit'])->name('categories.edit');
 Route::post('/quiz/categories/{slug}', [QuizCategoryController::class, 'update'])->name('categories.update');
 
-
+// Event menu
+Route::get('/quiz/event', [QuizEventController::class, 'index'])->name('event.index');
+Route::get('/quiz/event/Add', [QuizEventController::class, 'create'])->name('event.create');
+Route::post('/quiz/event/Add', [QuizEventController::class, 'store'])->name('event.store');
 });
 
 

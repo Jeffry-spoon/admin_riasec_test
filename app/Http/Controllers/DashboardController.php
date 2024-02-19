@@ -29,26 +29,19 @@ class DashboardController extends Controller
     $formattedStartOfWeek = $startOfWeek->format('Y-m-d H:i:s');
     $formattedEndOfWeek = $endOfWeek->format('Y-m-d H:i:s');
 
-    // result every week
-    $resultsSummary = DB::table('users')
-    ->join('results', 'users.id', '=', 'results.user_id')
-    ->join('users_details', 'users.id', '=', 'users_details.user_id')
+    $results = DB::table('results')
+    ->select('results.id', 'users.name','users.email', 'users_details.education_level', 'users_details.school_name', 'results.score', 'results.created_at as test_date', 'results.difference as waktu_pengerjaan', 'results.event_id', 'events.title', 'results.difference', 'results.created_at','results.start_time', 'results.end_time')
+    ->join('users', 'users.id', '=', 'results.user_id')
     ->whereBetween('results.created_at', [$formattedStartOfWeek, $formattedEndOfWeek])
-    ->select(
-        'users.name',
-        'users.email',
-        'users_details.education_level',
-        'users_details.gender',
-        'users_details.phone_number',
-        'users_details.school_name',
-        'users_details.occupation_desc',
-        'results.types_id',
-        'results.score',
-        'results.created_at'
-    )
+    ->join('users_details', 'users_details.user_id', '=', 'results.user_id')
+    ->join('events', 'events.id', '=', 'results.event_id')
     ->get();
+    $grouped = $results->groupBy('event_id');
 
-    $countResults = $resultsSummary->count();
+
+        // dd($grouped);
+
+    $countResults = $results->count();
 
     // total result
     $totalResult = DB::table('results')
@@ -63,7 +56,7 @@ class DashboardController extends Controller
 
     return view('dashboard',
     compact(
-        'resultsSummary',
+        'grouped',
         'countResults',
         'formattedEndOfWeek',
         'formattedStartOfWeek',
