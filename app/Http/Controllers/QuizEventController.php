@@ -16,7 +16,7 @@ class QuizEventController extends Controller
         $events = DB::table('events')
         ->whereNull('deleted_at')
         ->get();
-        
+
         return view('surveys.events.data-event', compact('events'));
     }
 
@@ -65,24 +65,60 @@ class QuizEventController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $slug)
     {
-        //
+        $events = DB::table('events')
+        ->whereNull('deleted_at')
+        ->where('slug', $slug)
+        ->get();
+
+        return view ('surveys.events.edit-event', compact('events'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $slug)
     {
-        //
+      // Validasi request
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'date' => 'required|date',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        // Lakukan tindakan update berdasarkan slug yang diberikan
+        $affected = DB::table('events')
+                    ->where('slug', $slug)
+                    ->update([
+                        'title' => $request->title,
+                        'cut_off_date' => $request->date,
+                        'is_active' => $request->has('is_active') ? 1 : 0, // Gunakan has() untuk mengecek keberadaan is_active dalam request
+                        'updated_at' => Carbon::now(),
+                    ]);
+
+        if ($affected > 0) {
+            // Redirect atau response yang sesuai jika data berhasil diupdate
+            session()->flash('alert', ['type' => 'success', 'message' => ' Your Data has been updated ']);
+            return redirect()->route('event.index');
+        } else {
+            // Handle jika data tidak ditemukan
+            return redirect()->route('event.index')->with('error', 'Event not found');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $slug)
     {
-        //
+        $events = DB::table('events')
+        ->whereNull('deleted_at') // Pastikan deleted_at = null sebelumnya
+        ->where('slug', $slug)
+        ->update(['deleted_at' => Carbon::now()]);
+
+        session()->flash('alert', ['type' => 'success', 'message' => ' Your Data has been deleted ']);
+
+        return redirect()->route('event.index');
     }
 }

@@ -2,24 +2,29 @@
 
 @section('content')
     <main class="main-content">
-        @include('components.navbar')
-        <div class="iq-navbar-header">
-            <div class="container-fluid iq-container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="flex-wrap d-flex justify-content-between align-items-center">
-                            <div>
-                                @include('components.breadcrumbs')
-                                <h1></h1>
+        <div class="position-relative iq-banner">
+            <!--Nav Start-->
+            @include('components.navbar')
+            <!-- Nav Header Component Start -->
+            <div class="iq-navbar-header" style="height: 215px;">
+                <div class="container-fluid iq-container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="flex-wrap d-flex justify-content-between align-items-center">
+                                <div>
+                                    @include('components.breadcrumbs')
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="iq-header-img">
+                    <img src="{{ asset('images/dashboard/top-header.png') }}" alt="header"
+                        class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
+                </div>
             </div>
-            <div class="iq-header-img">
-                <img src="{{ asset('images/dashboard/top-header.png') }}" alt="header"
-                    class="theme-color-default-img img-fluid w-100 h-100 animated-scaleX">
-            </div>
+            <!-- Nav Header Component End -->
+            <!--Nav End-->
         </div>
 
         <div class="conatiner-fluid content-inner py-0">
@@ -37,7 +42,9 @@
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label for="title" class="form-label">Title</label>
-                                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" aria-describedby="title" placeholder="Input here..." name="title" autofocus required value="{{ old('title') }}">
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            id="title" aria-describedby="title" placeholder="Input here..."
+                                            name="title" autofocus required value="{{ old('title') }}">
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
