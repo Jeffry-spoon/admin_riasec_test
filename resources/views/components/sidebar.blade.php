@@ -114,8 +114,8 @@
                                 <span class="item-name">Event</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ Str::startsWith($currentUrl, url('/quiz/categories')) || Request::is('categories/{slug}') ? 'active' : '' }}"
+                        <li class="nav-item" >
+                            <a class=" disabled nav-link {{ Str::startsWith($currentUrl, url('/quiz/categories')) || Request::is('categories/{slug}') ? 'active' : '' }}"
                                 href="{{ url('/quiz/categories') }}">
                                 <i class="icon">
                                     <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
@@ -130,7 +130,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link  {{ Str::startsWith($currentUrl, url('/quiz/quizess&surveys')) ? 'active' : '' }}"
+                            <a class=" disabled nav-link  {{ Str::startsWith($currentUrl, url('/quiz/quizess&surveys')) ? 'active' : '' }}"
                                 href="{{ url('/quiz/quizess&surveys') }}">
                                 <i class="icon">
                                     <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
@@ -146,7 +146,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" >
                     <a class="nav-link {{ Request::is('admin*') ? 'active' : '' }} disabled opacity-25"
                         aria-current="page" href="{{ url('/admin') }}">
                         <i class="icon">
