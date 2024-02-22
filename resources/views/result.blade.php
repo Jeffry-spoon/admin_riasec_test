@@ -29,7 +29,8 @@
                             </div>
                         </div>
                         <div class="card-body">
-                          @include('components.table.resultTable')
+                       
+                          @include('components.table.resultTable', $results)
                         </div>
                     </div>
                 </div>

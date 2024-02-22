@@ -86,21 +86,27 @@
                 </tr>
             @endforeach
         </tbody>
-        <!-- <tfoot>
-        <tr>
-            <th>User</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>School Name</th>
-            <th>Future Occupation</th>
-            <th>R</th>
-            <th>I</th>
-            <th>A</th>
-            <th>S</th>
-            <th>E</th>
-            <th>C</th>
-        </tr>
-    </tfoot> -->
+        <tfoot>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>School Name</th>
+                <th>Future Occupation</th>
+                <th>R</th>
+                <th>I</th>
+                <th>A</th>
+                <th>S</th>
+                <th>E</th>
+                <th>C</th>
+                <th>Test Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Completion Time</th>
+                <th>Event</th>
+                <th>Quizzes & Surveys </th>
+            </tr>
+        </tfoot>
     </table>
 
 </div>
