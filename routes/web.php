@@ -24,6 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard.index');
 
 Route::get('/result', [ResultController::class, 'index'])->name('result.index');
+Route::get('/result/download/pdf', [ResultController::class, 'download_pdf']);
 Route::get('/result/export/excel', [ResultController::class, 'exportExcel']);
 
 //  Questions menu
