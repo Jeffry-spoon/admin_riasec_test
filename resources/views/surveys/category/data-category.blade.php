@@ -20,7 +20,7 @@
                         <div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="card">
+                                    <div class="card-body px-0">
                                         <div class="table-responsive">
                                             <table id="user-list-table" class="table table-striped" role="grid"
                                                 data-bs-toggle="data-table">

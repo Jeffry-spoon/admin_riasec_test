@@ -79,34 +79,46 @@ class QuizDetailController extends Controller
      */
     public function edit(string $slug)
     {
-        // $data = DB::table('types')
-        // ->where('slug', $slug)
-        // ->get();
 
-        // dd($data);
+        $type = DB::table('types')
+        ->select('id')
+        ->where('slug', $slug)
+        ->first();
 
-        return view('surveys.question.edit-questions');
-    }
+        $questions = DB::table('questions')
+            ->select('questions.questions_text', 'categories.category_text')
+            ->join('types', 'questions.types_id', '=', 'types.id')
+            ->join('categories', 'questions.categories_id', '=', 'categories.id')
+            ->where('types.id', $type->id)
+            ->get();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        DB::table('types')
-        ->where('id', $id) // Filter data berdasarkan ID
-        ->where('is_project', true) // Filter data di mana is_project true
-        ->update(['is_project' => false]); // Update kolom is_project menjadi false
+        $categories = DB::table('categories')
+            ->select('id','category_text','slug')
+            ->get();
 
-        session()->flash('alert', ['type' => 'success', 'message' => ' Data has been successfully removed from the system']);
-        return redirect()->route('questions.index');
-    }
+return view('surveys.question.edit-questions', compact('categories', 'questions'));
+}
+
+/**
+* Update the specified resource in storage.
+*/
+public function update(Request $request, string $id)
+{
+//
+}
+
+/**
+* Remove the specified resource from storage.
+*/
+public function destroy(string $id)
+{
+DB::table('types')
+->where('id', $id) // Filter data berdasarkan ID
+->where('is_project', true) // Filter data di mana is_project true
+->update(['is_project' => false]); // Update kolom is_project menjadi false
+
+session()->flash('alert', ['type' => 'success', 'message' => ' Data has been successfully removed from the system']);
+return redirect()->route('questions.index');
+}
 }
