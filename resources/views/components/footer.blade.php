@@ -2,7 +2,7 @@
 <footer class="footer">
     <div class="footer-body">
          <ul class="left-panel list-inline mb-0 p-0">
-                  <li class="list-inline-item">Verion 1.0</li>
+                  <li class="list-inline-item">Verion 1.1</li>
               </ul>
         <div class="right-panel">
             ©<script>document.write(new Date().getFullYear())</script> RIASEC Admin, Made with

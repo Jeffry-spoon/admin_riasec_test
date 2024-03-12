@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+use function PHPSTORM_META\type;
 
 class QuizDetailController extends Controller
 {
@@ -13,25 +17,25 @@ class QuizDetailController extends Controller
      */
     public function index()
     {
-            $totalData = DB::table('types')
-            ->select(
-                'types.id',
-                'types.type_name',
-                'types.slug',
-                'types.created_at',
-                'types.updated_at',
-                'types.deleted_at',
-                'types.is_active',
-                DB::raw('COUNT(DISTINCT results.id) as total_participants'),
-                DB::raw('COUNT(DISTINCT questions.id) as total_questions')
-            )
-            ->addSelect(DB::raw("'true' as is_project")) // Tambahkan kolom is_project
-    ->leftJoin('results', 'types.id', '=', 'results.types_id')
-    ->leftJoin('questions', 'types.id', '=', 'questions.types_id')
-    ->where('is_project', true) // Filter hanya di mana is_project true
-    ->groupBy('types.id', 'types.type_name', 'types.slug', 'types.created_at', 'types.updated_at', 'types.deleted_at', 'types.is_active')
-    ->get();
-
+        $totalData = DB::table('types')
+        ->select(
+            'types.id',
+            'types.type_name',
+            'types.slug',
+            'types.created_at',
+            'types.updated_at',
+            'types.deleted_at',
+            'types.is_active',
+            DB::raw('COUNT(DISTINCT results.id) as total_participants'),
+            DB::raw('COUNT(DISTINCT questions.id) as total_questions'),
+            'users.name as updated_by' // Menambahkan nama pengguna (user) yang melakukan pembaruan
+        )
+        ->leftJoin('results', 'types.id', '=', 'results.types_id')
+        ->leftJoin('questions', 'types.id', '=', 'questions.types_id')
+        ->leftJoin('users', 'types.user_id', '=', 'users.id') // Melakukan join ke tabel users
+        ->where('is_project', true) // Filter hanya di mana is_project true
+        ->groupBy('types.id', 'types.type_name', 'types.slug', 'types.created_at', 'types.updated_at', 'types.deleted_at', 'types.is_active', 'users.name')
+        ->get();
 
         return view('surveys/question/data-questions', compact('totalData'));
     }
@@ -63,7 +67,7 @@ class QuizDetailController extends Controller
 
         session()->flash('alert', ['type' => 'success', 'message' => 'Your Data is Submitted']);
 
-        return redirect()->route('questions.index');
+        return redirect()->route('type.index');
     }
 
     /**
@@ -77,35 +81,154 @@ class QuizDetailController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $slug)
+    public function edit(string $id)
     {
 
         $type = DB::table('types')
-        ->select('id')
-        ->where('slug', $slug)
+        ->select('id', 'type_name', 'slug', 'is_active')
+        ->where('id', $id)
         ->first();
 
         $questions = DB::table('questions')
-            ->select('questions.questions_text', 'categories.category_text')
+            ->select('questions.id', 'questions.questions_text', 'categories.category_text')
             ->join('types', 'questions.types_id', '=', 'types.id')
             ->join('categories', 'questions.categories_id', '=', 'categories.id')
             ->where('types.id', $type->id)
             ->get();
 
-
         $categories = DB::table('categories')
             ->select('id','category_text','slug')
             ->get();
 
-return view('surveys.question.edit-questions', compact('categories', 'questions'));
-}
+        return view('surveys.question.edit-questions', compact('categories', 'questions', 'type'));
+        }
 
 /**
 * Update the specified resource in storage.
 */
-public function update(Request $request, string $id)
+public function insert_questions(Request $request, string $id)
 {
-//
+
+     // Validasi request jika diperlukan
+     $request->validate([
+        'questions_text' => 'required|array',
+        'questions_text.*' => 'required|string',
+        'category' => 'required|array',
+        'category.*' => 'required|integer',
+    ]);
+
+    // Proses data dari permintaan
+    $questions_text = $request->input('questions_text');
+    $categories = $request->input('category');
+
+    // Mulai transaksi
+    DB::beginTransaction();
+
+    try {
+        // Loop melalui data yang diterima
+        foreach ($questions_text as $index => $question_text) {
+            // Lakukan validasi atau pemrosesan lainnya jika perlu
+
+            // Simpan data ke database
+            DB::table('questions')->insert([
+                'questions_text' => $question_text,
+                'categories_id' => $categories[$index],
+                'types_id' => $id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        // Commit transaksi jika tidak ada kesalahan
+        DB::commit();
+
+        // Set pesan sukses
+        session()->flash('alert', ['type' => 'success', 'message' => ' Your Data is Submitted']);
+
+        // Kirim respons kembali ke klien
+        return redirect()->route('type.index');
+    } catch (\Exception $e) {
+        // Kirim respons dengan pesan error
+        return response()->json(['message' => 'Failed to save data: ' . $e->getMessage()], 500);
+    }
+}
+
+public function update_questions(Request $request, string $id)
+{
+    dd($request->all());
+   // Validasi request
+   $validator = Validator::make($request->all(), [
+    'questions_text' => 'required|array',
+    'questions_text.*' => 'required|string',
+    'category' => 'required|array',
+    'category.*' => 'required|string',
+]);
+
+// Cek apakah validasi gagal
+if ($validator->fails()) {
+    return response()->json(['errors' => $validator->errors()], 400);
+}
+
+// Mengambil data dari request
+$requestData = $request->all();
+
+// Memeriksa apakah request kosong
+if (empty($requestData['questions_text'])) {
+    return response()->json(['message' => 'No questions provided'], 400);
+}
+
+// Memeriksa apakah jumlah pertanyaan dan kategori sesuai
+if (count($requestData['questions_text']) !== count($requestData['category'])) {
+    return response()->json(['message' => 'Questions and categories count mismatch'], 400);
+}
+
+// Merapikan data
+$preparedData = collect($requestData['questions_text'])->map(function ($item, $key) use ($requestData) {
+    return [
+        'id' => $key + 31, // Jika ID dimulai dari 31
+        'questions_text' => $item,
+        'category_text' => $this->getCategoryText($requestData['category'][$key]) // Anda perlu menambahkan logika untuk mendapatkan category_text berdasarkan ID kategori
+    ];
+});
+
+dd($preparedData, $id);
+
+
+}
+
+public function update_type(Request $request, string $id)
+{
+
+    // Mendapatkan ID pengguna yang sedang masuk
+    $user_id = Auth::id();
+
+    // Mengambil data jenis survei berdasarkan ID
+    $type = DB::table('types')->where('id', $id)->first();
+
+    if (!$type) {
+        return redirect()->back()->with('error', 'Survey not found.');
+    }
+
+    // Jika status aktif berubah menjadi true
+    if ($request->is_active && !$type->is_active) {
+        // Nonaktifkan jenis survei lain yang aktif
+        DB::table('types')->where('is_active', true)->update(['is_active' => false]);
+    }
+
+    // Mengupdate data jenis survei
+    DB::table('types')
+        ->where('id', $id)
+        ->update([
+            'type_name' => $request->type_name,
+            'slug' => $request->slug,
+            'is_active' => $request->is_active ?? 0, // Memperbarui is_active sesuai dengan request
+            'user_id' => $user_id, // Menambahkan kolom updated_by
+            'updated_at' => now(), // Mengupdate kolom updated_at secara otomatis
+        ]);
+
+    // Setelah berhasil mengupdate, redirect dengan pesan sukses
+    session()->flash('alert', ['type' => 'success', 'message' => 'Data has been successfully updated.']);
+    return redirect()->route('type.index');
 }
 
 /**
@@ -119,6 +242,6 @@ DB::table('types')
 ->update(['is_project' => false]); // Update kolom is_project menjadi false
 
 session()->flash('alert', ['type' => 'success', 'message' => ' Data has been successfully removed from the system']);
-return redirect()->route('questions.index');
+return redirect()->route('type.index');
 }
 }

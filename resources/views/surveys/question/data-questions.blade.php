@@ -16,7 +16,7 @@
                         <div class="card-header">
                             <div class="header-title d-flex align-items-center justify-content-between">
                                 <h4 class="card-title">Quizzes & Surveys</h4>
-                                <a class="btn btn-border ps-4" href="{{ route('questions.create') }}">
+                                <a class="btn btn-border ps-4" href="{{ route('type.create') }}">
                                     Add New
                                     <svg class="icon-32" width="32" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -46,6 +46,7 @@
                                                             <th>Participants</th>
                                                             <th>Created at</th>
                                                             <th>Updated at</th>
+                                                            <th>Updated by</th>
                                                             <th>Active</th>
                                                             <th style="min-width: 100px">Action</th>
                                                         </tr>
@@ -61,6 +62,7 @@
                                                                 <td>{{ $data->total_participants }}</td>
                                                                 <td>{{ $data->created_at }}</td>
                                                                 <td>{{ $data->updated_at }}</td>
+                                                                <td>{{ $data->updated_by }}</td>
                                                                 <td>
                                                                     @if ($data->is_active == 1)
                                                                         <span class="badge bg-primary">Active</span>
@@ -73,7 +75,7 @@
                                                                         <a class="btn btn-sm btn-icon btn-warning"
                                                                             data-bs-toggle="tooltip" data-bs-placement="top"
                                                                             title="Edit" data-original-title="Edit"
-                                                                            href="{{ route('questions.edit', $data->slug) }}">
+                                                                            href="{{ route('type.edit', $data->id) }}">
                                                                             <span class="btn-inner">
                                                                                 <svg class="icon-20" width="20"
                                                                                     viewBox="0 0 24 24" fill="none"
@@ -103,7 +105,7 @@
                                                                         <a class="btn btn-sm btn-icon btn-danger"
                                                                             data-bs-toggle="tooltip" data-bs-placement="top"
                                                                             title="Delete"
-                                                                            href="{{ route('questions.destroy', $data->id) }}"
+                                                                            href="{{ route('type.destroy', $data->id) }}"
                                                                             onclick="return confirmDelete(event)">
                                                                             <span class="btn-inner">
                                                                                 <svg class="icon-20" width="20"

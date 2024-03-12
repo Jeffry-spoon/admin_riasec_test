@@ -37,7 +37,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="{{ route('questions.store') }}">
+                            <form method="post" action="{{ route('type.store') }}">
                                 @csrf
                                 <div class="mb-3">
                                     <div class="form-group">
