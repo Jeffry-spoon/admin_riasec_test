@@ -155,46 +155,48 @@ public function insert_questions(Request $request, string $id)
 
 public function update_questions(Request $request, string $id)
 {
-    dd($request->all());
-   // Validasi request
-   $validator = Validator::make($request->all(), [
-    'questions_text' => 'required|array',
-    'questions_text.*' => 'required|string',
-    'category' => 'required|array',
-    'category.*' => 'required|string',
-]);
+    // dd($request);
+     // Validasi request
 
-// Cek apakah validasi gagal
-if ($validator->fails()) {
-    return response()->json(['errors' => $validator->errors()], 400);
+
+    // Mulai transaksi database
+    DB::beginTransaction();
+
+    try {
+        // Hapus semua pertanyaan terkait dengan jenis survei yang ada
+        DB::table('questions')
+            ->where('types_id', $id)
+            ->delete();
+
+        // Loop melalui data yang diterima
+        if(!empty($request->input('questions'))){
+        foreach ($request->questions_text as $index => $question_text) {
+            // Buat pertanyaan baru berdasarkan data yang diterima
+            DB::table('questions')->insert([
+                'questions_text' => $question_text,
+                'categories_id' => $request->category[$index],
+                'types_id' => $id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }};
+
+        // Commit transaksi jika tidak ada kesalahan
+        DB::commit();
+
+        // Set pesan sukses
+        session()->flash('alert', ['type' => 'success', 'message' => ' Your Data is Submitted']);
+
+          // Kirim respons kembali ke klien
+          return redirect()->route('type.index');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollBack();
+        // Kirim respons dengan pesan error
+        return response()->json(['message' => 'Failed to update questions: ' . $e->getMessage()], 500);
+    }
 }
 
-// Mengambil data dari request
-$requestData = $request->all();
-
-// Memeriksa apakah request kosong
-if (empty($requestData['questions_text'])) {
-    return response()->json(['message' => 'No questions provided'], 400);
-}
-
-// Memeriksa apakah jumlah pertanyaan dan kategori sesuai
-if (count($requestData['questions_text']) !== count($requestData['category'])) {
-    return response()->json(['message' => 'Questions and categories count mismatch'], 400);
-}
-
-// Merapikan data
-$preparedData = collect($requestData['questions_text'])->map(function ($item, $key) use ($requestData) {
-    return [
-        'id' => $key + 31, // Jika ID dimulai dari 31
-        'questions_text' => $item,
-        'category_text' => $this->getCategoryText($requestData['category'][$key]) // Anda perlu menambahkan logika untuk mendapatkan category_text berdasarkan ID kategori
-    ];
-});
-
-dd($preparedData, $id);
-
-
-}
 
 public function update_type(Request $request, string $id)
 {

@@ -34,7 +34,7 @@ Route::get('/quiz/quizess&surveys/Add', [QuizDetailController::class, 'create'])
 Route::get('/quiz/quizess&surveys/Edit-{id}', [QuizDetailController::class, 'edit'])->name('type.edit');
 Route::get('/quiz/quizess&surveys/Drop-{slug}', [QuizDetailController::class, 'destroy'])->name('type.destroy');
 Route::put('/quiz/quizess&surveys/Edit-{slug}', [QuizDetailController::class, 'update'])->name('questions.update');
-Route::put('/quiz/quizess&surveys/questions{id}', [QuizDetailController::class, 'update_questions'])->name('questions_types.update');
+Route::post('/quiz/quizess&surveys/type{id}', [QuizDetailController::class, 'update_questions'])->name('questions_types.update');
 Route::put('/quiz/quizess&surveys/type{id}', [QuizDetailController::class, 'update_type'])->name('type.update');
 Route::post('/quiz/quizess&surveys/questions{id}', [QuizDetailController::class, 'insert_questions'])->name('questions.store');
 

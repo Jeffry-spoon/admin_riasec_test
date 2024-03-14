@@ -41,9 +41,6 @@
                             <form method="POST"
                                 action="{{ $questions->isEmpty() ? route('questions.store', $type->id) : route('questions_types.update', $type->id) }}">
                                 @csrf
-                                @if (!$questions->isEmpty())
-                                    @method('PUT')
-                                @endif
                                 <!-- Tabel pertanyaan -->
                                 <table class="table" id="questionsTable">
                                     <thead>
@@ -51,7 +48,7 @@
                                             <th>#</th>
                                             <th>Question</th>
                                             <th>Category</th>
-                                            <th>Type</th>
+                                            <th>Questions Type</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -72,7 +69,7 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td>Scala Likert</td>
+                                                <td>Scala Likert (1-6)</td>
                                                 <td>
                                                     <button class="btn btn-sm btn-icon btn-danger" onclick="deleteRow(this)"
                                                         data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
@@ -279,7 +276,6 @@
             }
         }
 
-
         // Fungsi untuk mengirim data ke controller menggunakan AJAX
         function sendDataToController() {
             // Merapihkan data
@@ -308,6 +304,45 @@
                 }
             });
         }
+
+        // Fungsi untuk mengirim data ke server menggunakan AJAX
+    function updateQuestions() {
+        // Menyiapkan data untuk dikirim
+        var formData = new FormData(document.getElementById('questionsForm'));
+
+        // Melakukan request AJAX
+        $.ajax({
+            url: "{{ route('questions.update', $type->id) }}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Tampilkan pesan sukses atau lakukan tindakan lain yang sesuai
+                console.log('Questions updated successfully:', response);
+                // Misalnya, Anda dapat menampilkan pesan berhasil menggunakan SweetAlert
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Questions updated successfully!',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            },
+            error: function(xhr, status, error) {
+                // Tangani kesalahan, mungkin menampilkan pesan kesalahan atau melakukan tindakan lain
+                console.error('Error updating questions:', error);
+                // Misalnya, Anda dapat menampilkan pesan kesalahan menggunakan SweetAlert
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to update questions. Please try again later.',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
+    }
 
         // Fungsi untuk merapikan data dari form sebelum dikirim
         function prepareData() {
