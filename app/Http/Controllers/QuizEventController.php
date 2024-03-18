@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 
 class QuizEventController extends Controller
 {
@@ -14,7 +15,9 @@ class QuizEventController extends Controller
     public function index()
     {
         $events = DB::table('events')
-        ->whereNull('deleted_at')
+        ->select('events.title', 'events.slug', 'events.cut_off_date', 'events.created_at', 'events.updated_at', 'users.name as updated_by')
+        ->join('users', 'events.user_id', '=', 'users.id')
+        ->whereNull('events.deleted_at')
         ->get();
 
         return view('surveys.events.data-event', compact('events'));
@@ -33,21 +36,23 @@ class QuizEventController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
-            'date' => 'required|date|after_or_equal:' . Carbon::now()->format('Y-m-d'),
-            'is_active' => 'nullable|boolean',
-        ]);
+        // Validasi data dari request
+    $validatedData = $request->validate([
+    'title' => 'required|string|max:255',
+    'slug' => 'required|string|max:255',
+    'date' => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
+    'is_active' => 'nullable|boolean',
+    ]);
 
-        // Simpan data menggunakan Query Builder
+    // Simpan data menggunakan Query Builder
     DB::table('events')->insert([
-        'title' => $validatedData['title'],
-        'slug' => $validatedData['slug'],
-        'cut_off_date' => $validatedData['date'],
-        'is_active' => $request->has('is_active') ? 1 : 0,
-        'created_at' => now(),
-        'updated_at' => now(),
+    'title' => $validatedData['title'],
+    'slug' => $validatedData['slug'],
+    'cut_off_date' => $validatedData['date'],
+    'is_active' => $request->has('is_active') ? 1 : 0,
+    'user_id' =>  App::make('currentUserId'), // Tambahkan ID pengguna ke dalam kolom user_id
+    'created_at' => now(),
+    'updated_at' => now(),
     ]);
 
     session()->flash('alert', ['type' => 'success', 'message' => 'Your Data is Submitted']);
@@ -95,6 +100,7 @@ class QuizEventController extends Controller
                         'cut_off_date' => $request->date,
                         'is_active' => $request->has('is_active') ? 1 : 0, // Gunakan has() untuk mengecek keberadaan is_active dalam request
                         'updated_at' => Carbon::now(),
+                        'user_id' =>  App::make('currentUserId')
                     ]);
 
         if ($affected > 0) {
@@ -115,7 +121,10 @@ class QuizEventController extends Controller
         $events = DB::table('events')
         ->whereNull('deleted_at') // Pastikan deleted_at = null sebelumnya
         ->where('slug', $slug)
-        ->update(['deleted_at' => Carbon::now()]);
+        ->update([
+            'deleted_at' => Carbon::now(),
+            'user_id' =>  App::make('currentUserId')
+        ]);
 
         session()->flash('alert', ['type' => 'success', 'message' => ' Your Data has been deleted ']);
 

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\App;
 
 use function PHPSTORM_META\type;
 
@@ -19,16 +19,16 @@ class QuizDetailController extends Controller
     {
         $totalData = DB::table('types')
         ->select(
-            'types.id',
-            'types.type_name',
-            'types.slug',
-            'types.created_at',
-            'types.updated_at',
-            'types.deleted_at',
-            'types.is_active',
-            DB::raw('COUNT(DISTINCT results.id) as total_participants'),
-            DB::raw('COUNT(DISTINCT questions.id) as total_questions'),
-            'users.name as updated_by' // Menambahkan nama pengguna (user) yang melakukan pembaruan
+        'types.id',
+        'types.type_name',
+        'types.slug',
+        'types.created_at',
+        'types.updated_at',
+        'types.deleted_at',
+        'types.is_active',
+        DB::raw('COUNT(DISTINCT results.id) as total_participants'),
+        DB::raw('COUNT(DISTINCT questions.id) as total_questions'),
+        'users.name as updated_by' // Menambahkan nama pengguna (user) yang melakukan pembaruan
         )
         ->leftJoin('results', 'types.id', '=', 'results.types_id')
         ->leftJoin('questions', 'types.id', '=', 'questions.types_id')
@@ -62,7 +62,8 @@ class QuizDetailController extends Controller
             'is_active' => false,
             'is_project' => true,
             'created_at' => $now,
-            'updated_at' => $now
+            'updated_at' => $now,
+            'user_id' =>  App::make('currentUserId')
         ]);
 
         session()->flash('alert', ['type' => 'success', 'message' => 'Your Data is Submitted']);
@@ -226,6 +227,7 @@ public function update_type(Request $request, string $id)
             'is_active' => $request->is_active ?? 0, // Memperbarui is_active sesuai dengan request
             'user_id' => $user_id, // Menambahkan kolom updated_by
             'updated_at' => now(), // Mengupdate kolom updated_at secara otomatis
+            'user_id' =>  App::make('currentUserId'),
         ]);
 
     // Setelah berhasil mengupdate, redirect dengan pesan sukses
@@ -238,10 +240,14 @@ public function update_type(Request $request, string $id)
 */
 public function destroy(string $id)
 {
-DB::table('types')
-->where('id', $id) // Filter data berdasarkan ID
-->where('is_project', true) // Filter data di mana is_project true
-->update(['is_project' => false]); // Update kolom is_project menjadi false
+    DB::table('types')
+    ->where('id', $id) // Filter data berdasarkan ID
+    ->where('is_project', true) // Filter data di mana is_project true
+    ->update([
+        'is_project' => false, // Update kolom is_project menjadi false
+        'deleted_at' => now(),
+        'user_id' =>  App::make('currentUserId'), // Update tanggal deleted_at menjadi waktu sekarang
+    ]);
 
 session()->flash('alert', ['type' => 'success', 'message' => ' Data has been successfully removed from the system']);
 return redirect()->route('type.index');

@@ -7,6 +7,7 @@ use App\Http\Controllers\QuizCategoryController;
 use App\Http\Controllers\QuizDetailController;
 use App\Http\Controllers\QuizEventController;
 use App\Http\Controllers\ResultController;
+use App\Http\Controllers\TeamUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,13 +20,15 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:super admin,penanggung jawab,fasilitator'])->group(function () {
 
+// Dashboard Menu
 Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard.index');
 
+// Result Menu
 Route::get('/result', [ResultController::class, 'index'])->name('result.index');
 Route::get('/result/download/pdf', [ResultController::class, 'download_pdf']);
-Route::get('/result/export/excel', [ResultController::class, 'exportExcel']);
+Route::get('/result/download/excel', [ResultController::class, 'exportExcel']);
 
 //  Questions menu
 Route::get('/quiz/quizess&surveys', [QuizDetailController::class, 'index'])->name('type.index');
@@ -50,13 +53,14 @@ Route::post('/quiz/event/Add', [QuizEventController::class, 'store'])->name('eve
 Route::get('/quiz/event/Edit-{slug}', [QuizEventController::class, 'edit'])->name('event.edit');
 Route::put('/quiz/event/Edit-{slug}', [QuizEventController::class, 'update'])->name('event.update');
 Route::get('/quiz/event/Drop-{slug}', [QuizEventController::class, 'destroy'])->name('event.destroy');
+
+// Team Menu
+Route::get('/team', [TeamUserController::class, 'index'])->name('team.index');
+Route::get('/team/Edit-{id}', [TeamUserController::class, 'edit'])->name('team.edit');
+Route::put('/team/Edit-{id}', [TeamUserController::class, 'update'])->name('team.update');
+Route::get('/team/Add', [TeamUserController::class, 'create'])->name('team.create');
+Route::post('/team/Add', [TeamUserController::class, 'store'])->name('team.store');
+Route::get('/team/Drop-{id}', [TeamUserController::class, 'destroy'])->name('team.destroy');
 });
-
-
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
 
 require __DIR__.'/auth.php';

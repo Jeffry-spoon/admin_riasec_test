@@ -56,6 +56,7 @@
         }
     </style>
 </head>
+<body>
 <div class="header">
     <h4>Result - {{ \Carbon\Carbon::now()->format('Y-m-d H:i') }}</h4>
 </div>
@@ -78,19 +79,21 @@
             <th>End Time</th>
             <th>Completion Time</th>
             <th>Event</th>
-            <th>Quizzes & Surveys</th>
+            <th>Quizzes &amp; Surveys</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($results as $result)
+
+        @foreach ($stackings as $result)
+               {{-- @dd($result); --}}
             <tr>
-                <td>{{ $result->name }}</td>
-                <td>{{ $result->email }}</td>
-                <td>{{ $result->phone_number }}</td>
-                <td>{{ $result->school_name }}</td>
-                <td>{{ $result->occupation_desc }}</td>
+                <td>{{ $result['name'] }}</td>
+                <td>{{ $result['email'] }}</td>
+                <td>{{ $result['phone_number'] }}</td>
+                <td>{{ $result['school_name'] }}</td>
+                <td>{{ $result['occupation']}}</td>
                 @php
-                    $score = json_decode($result->score, true);
+                    $score = json_decode($result['score'], true);
                 @endphp
                 <td>{{ $score['REALISTIC'] ?? ($score['R'] ?? 'N/A') }}</td>
                 <td>{{ $score['INVESTIGATIVE'] ?? ($score['I'] ?? 'N/A') }}</td>
@@ -98,12 +101,12 @@
                 <td>{{ $score['SOCIAL'] ?? ($score['S'] ?? 'N/A') }}</td>
                 <td>{{ $score['ENTERPRISING'] ?? ($score['E'] ?? 'N/A') }}</td>
                 <td>{{ $score['CONVENTIONAL'] ?? ($score['C'] ?? 'N/A') }}</td>
-                <td>{{ \Carbon\Carbon::parse($result->created_at)->format('Y-m-d H:i') }}</td>
-                <td>{{ $result->start_time }}</td>
-                <td>{{ $result->end_time }}</td>
-                <td>{{ $result->difference }}</td>
-                <td>{{ $result->event_title }}</td>
-                <td>{{ $result->type_title }}</td>
+                <td>{{ \Carbon\Carbon::parse($result['created_at'])->format('Y-m-d H:i') }}</td>
+                <td>{{ $result['start_time'] }}</td>
+                <td>{{ $result['end_time'] }}</td>
+                <td>{{ $result['difference'] }}</td>
+                <td>{{ $result['event_title'] }}</td>
+                <td>{{ $result['type_title'] }}</td>
             </tr>
         @endforeach
     </tbody>
@@ -112,8 +115,5 @@
     <p style="float: left;">© {{ \Carbon\Carbon::now()->format('Y') }} Psikologi Ukrida. All rights reserved.</p>
     <p style="float: right;">{{ \Carbon\Carbon::now()->format('Y-m-d H:i') }}</p>
 </div>
-
-
 </body>
-
 </html>

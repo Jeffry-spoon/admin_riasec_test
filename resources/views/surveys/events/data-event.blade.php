@@ -4,7 +4,7 @@
     <main class="main-content">
         @include('components.navbar')
 
-        <div class="conatiner-fluid content-inner mt-4 py-0">
+        <div class="conatiner-fluid content-inner mt-n3 py-0">
             <div class="row" style="margin-top: 60px">
                 <div class="col-sm-12">
                     @if (session('alert'))
@@ -44,6 +44,7 @@
                                                             <th>Cut off date</th>
                                                             <th>Created at</th>
                                                             <th>Updated at</th>
+                                                            <th>Updated by</th>
                                                             {{-- <th>Active</th> --}}
                                                             <th style="min-width: 100px">Action</th>
                                                         </tr>
@@ -60,6 +61,7 @@
                                                                     <td>{{ $event->cut_off_date }}</td>
                                                                     <td>{{ $event->created_at }}</td>
                                                                     <td>{{ $event->updated_at }}</td>
+                                                                    <td>{{ $event->updated_by }}</td>
                                                                     {{-- <td>
                                                                     @if ($event->is_active == 1)
                                                                         <span class="badge bg-primary">Active</span>

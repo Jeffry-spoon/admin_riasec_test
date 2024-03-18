@@ -50,7 +50,56 @@ class ResultController extends Controller
     }
 
     public function exportExcel () {
-        return Excel::download(new ExportResult, 'RiasecResult.xlsx');
+        $results = DB::table('results')
+    ->select(
+        'users.id as user_id',
+        'users.name',
+        'users.email',
+        'users_details.education_level',
+        'users_details.phone_number',
+        'users_details.school_name',
+        'users_details.occupation_desc',
+        'results.types_id',
+        'results.score',
+        'results.start_time',
+        'results.end_time',
+        'results.difference',
+        'results.created_at',
+        'events.title as event_title',
+        'types.type_name as type_title'
+    )
+    ->join('users', 'users.id', '=', 'results.user_id')
+    ->join('users_details', 'users_details.user_id', '=', 'results.user_id')
+    ->join('events', 'events.id', '=', 'results.event_id')
+    ->join('types', 'types.id', '=', 'results.types_id')
+    ->orderBy('results.created_at', 'DESC')
+    ->get();
+
+$count = 1;
+foreach ($results as $result) {
+    $stackings[] = [
+        'name' => $result->name,
+        'email' => $result->email,
+        'education_level' => $result->education_level,
+        'phone_number' => $result->phone_number,
+        'school_name' => $result->school_name,
+        'occupation' => $result->occupation_desc,
+        'typesID' => $result->types_id,
+        'score' => $result->score,
+        'start_time' => $result->start_time,
+        'end_time' => $result->end_time,
+        'difference' => $result->difference,
+        'created_at' => $result->created_at,
+        'event_title' => $result->event_title,
+        'type_title' => $result->type_title
+    ];
+    $count++;
+}
+        // Membuat objek ExportResult dan meneruskan $stackings
+    $exportResult = new ExportResult($stackings);
+
+    // Menggunakan objek ExportResult
+        return Excel::download($exportResult, 'Export Result- ' . date('dmY') . '.xlsx');
     }
 
     public function download_pdf() {
@@ -77,8 +126,29 @@ class ResultController extends Controller
         ->join('types',  'types.id', '=', 'results.types_id')
         ->orderBy('results.created_at', 'DESC')
         ->get();
-    $mpdf->WriteHTML(view('components.table.resultTable', ['results' => $results]));
-    $mpdf->Output('download-pdf-result.pdf','D');
+
+        $count = 1;
+        foreach ($results as $result) {
+        $stackings[] = [
+        'name' => $result->name,
+        'email' => $result->email,
+        'education_level' => $result->education_level,
+        'phone_number' => $result->phone_number,
+        'school_name' => $result->school_name,
+        'occupation' => $result->occupation_desc,
+        'typesID' => $result->types_id,
+        'score' => $result->score,
+        'start_time' => $result->start_time,
+        'end_time' => $result->end_time,
+        'difference' => $result->difference,
+        'created_at' => $result->created_at,
+        'event_title' => $result->event_title,
+        'type_title' => $result->type_title
+    ];
+    $count++;
+}
+    $mpdf->WriteHTML(view('components.table.resultTable', ['stackings' => $stackings]));
+    $mpdf->Output('download-pdf-result.pdf ','D');
     }
 
     /**

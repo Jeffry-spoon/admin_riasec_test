@@ -27,14 +27,14 @@
             <!-- Nav Header Component End -->
             <!--Nav End-->
         </div>
-        <div class="conatiner-fluid content-inner mt-n5 py-0">
+        <div class="container-fluid content-inner mt-n5 py-0">
             <div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
                                 <div class="header-title">
-                                    <h4 class="card-title mb-2  ">Edit Event</h4>
+                                    <h4 class="card-title mb-2">Edit Event</h4>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -62,14 +62,12 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-
                                         <div class="form-group">
                                             <label for="date" class="form-label">Cut off date</label>
                                             @php
                                                 // Ambil bagian tanggal dari string
                                                 $cutOffDate = substr($events->first()->cut_off_date, 0, 10);
                                             @endphp
-
                                             <input type="date" class="form-control @error('date') is-invalid @enderror"
                                                 id="date" aria-describedby="title" placeholder="Input here..."
                                                 name="date" autofocus value="{{ $cutOffDate }}"
@@ -79,39 +77,16 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                    <label for="flexSwitchCheckDefault" data-bs-toggle="tooltip" data-bs-placement="top" disabled
-                                        title="Next Version 👌">Is Active?</label>
-                                    <div class="form-check form-switch" disabled>
-                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" disabled
-                                            name="is_active" value="1"
-                                            @if ($events->first()->is_active) checked @endif>
-                                        <label class="form-check-label" for="flexSwitchCheckDefault" id="toggleLabel">
-                                            @if ($events->first()->is_active)
-                                                Yes
-                                            @else
-                                                No
-                                            @endif
-                                        </label>
-                                    </div>
-                                </div>
-                                    <button type="submit" class="btn btn-primary" id="submitButton"
+                                    <button type="submit" class="btn btn-primary me-3" id="submitButton"
                                         disabled>Update</button>
                                     <a href="{{ route('event.index') }}" type="submit" class="btn btn-danger">Cancel</a>
+                                </form>
                             </div>
-
-                            </form>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-        </div>
-        </div>
-        <!-- Footer Section Start -->
-        @include('components.footer')
-        <!-- Footer Section End -->
     </main>
 
     <script>
@@ -120,61 +95,35 @@
             document.getElementById('slug').value = title;
         });
 
-        const toggleSwitch = document.getElementById('flexSwitchCheckDefault');
-        const toggleLabel = document.getElementById('toggleLabel');
-
-        toggleSwitch.addEventListener('change', function() {
-            if (toggleSwitch.checked) {
-                toggleLabel.textContent = 'Yes';
-            } else {
-                toggleLabel.textContent = 'No';
-            }
-        });
-
+        const updateButton = document.getElementById('submitButton');
 
         document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('eventForm');
-    var originalFormData = new FormData(form);
-    var submitButton = document.getElementById('submitButton');
-    var toggleSwitch = document.getElementById('flexSwitchCheckDefault');
+            var form = document.getElementById('eventForm');
+            var originalFormData = new FormData(form);
 
-    // Simpan nilai awal tombol is_active
-    var originalIsActive = toggleSwitch.checked;
+            form.addEventListener('input', checkFormChanges);
 
-    form.addEventListener('input', function() {
-        checkFormChanges();
-    });
+            function checkFormChanges() {
+                var currentFormData = new FormData(form);
+                var formDataChanged = false;
 
-    toggleSwitch.addEventListener('change', function() {
-        checkFormChanges();
-    });
+                // Memeriksa perubahan pada setiap elemen form
+                for (var pair of currentFormData.entries()) {
+                    if (!originalFormData.has(pair[0]) || originalFormData.get(pair[0]) !== pair[1]) {
+                        formDataChanged = true;
+                        break;
+                    }
+                }
 
-    function checkFormChanges() {
-        var currentFormData = new FormData(form);
-        var formDataChanged = false;
-
-        for (var pair of currentFormData.entries()) {
-            if (!originalFormData.has(pair[0]) || originalFormData.get(pair[0]) !== pair[1]) {
-                formDataChanged = true;
-                break;
+                // Memperbarui status tombol Update
+                updateButton.disabled = !formDataChanged;
             }
-        }
 
-        // Periksa apakah nilai is_active telah berubah
-        if (toggleSwitch.checked !== originalIsActive) {
-            formDataChanged = true;
-        }
-
-        submitButton.disabled = !formDataChanged;
-    }
-
-    // Reset original form data when the form is submitted
-    form.addEventListener('submit', function() {
-        originalFormData = new FormData(form);
-        submitButton.disabled = true; // Menonaktifkan tombol setelah pengiriman formulir
-        originalIsActive = toggleSwitch.checked; // Perbarui nilai is_active asli setelah pengiriman
-    });
-});
-
+            // Reset form data awal saat formulir dikirim
+            form.addEventListener('submit', function() {
+                originalFormData = new FormData(form);
+                updateButton.disabled = true; // Menonaktifkan tombol setelah pengiriman formulir
+            });
+        });
     </script>
 @endsection

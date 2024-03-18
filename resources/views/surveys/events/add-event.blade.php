@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="{{ route('event.store') }}">
+                            <form method="post" action="{{ route('event.store') }}" id="eventForm">
                                 @csrf
                                 <div class="mb-3">
                                     <div class="form-group d-flex">
@@ -78,7 +78,7 @@
                                             id="toggleLabel">No</label>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary" id="submitButton" disabled>Submit</button>
                             </form>
                         </div>
                     </div>
@@ -106,9 +106,26 @@
             }
         });
 
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementById('eventForm');
+            var submitButton = document.getElementById('submitButton');
+
+            form.addEventListener('input', function() {
+                checkFormCompletion();
+            });
+
+            function checkFormCompletion() {
+                var inputs = form.querySelectorAll('input, select');
+                var isFormComplete = true;
+
+                inputs.forEach(function(input) {
+                    if (!input.value.trim()) {
+                        isFormComplete = false;
+                    }
+                });
+
+                submitButton.disabled = !isFormComplete;
+            }
+        });
     </script>
 @endsection

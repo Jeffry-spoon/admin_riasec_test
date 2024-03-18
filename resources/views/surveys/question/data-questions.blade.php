@@ -6,7 +6,7 @@
 
 
 
-        <div class="conatiner-fluid content-inner mt-4 py-0">
+        <div class="conatiner-fluid content-inner mt-n3 py-0">
             <div class="row" style="margin-top: 60px">
                 <div class="col-sm-12">
                     @if (session('alert'))
