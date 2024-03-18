@@ -108,8 +108,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'dmnriasec@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Hi Lupa password ya ? hadehh'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreplyriasectest@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', 'RIASEC TEST'),
     ],
 
     /*
