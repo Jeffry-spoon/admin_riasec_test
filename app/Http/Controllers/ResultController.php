@@ -25,6 +25,7 @@ class ResultController extends Controller
             'users_details.phone_number',
             'users_details.school_name',
             'users_details.occupation_desc',
+            'users_details.newsletter',
             'results.types_id',
             'results.score',
             'results.start_time',
@@ -40,7 +41,6 @@ class ResultController extends Controller
         ->join('types', 'types.id', '=', 'results.types_id')
         ->orderBy('results.created_at', 'DESC')
         ->get();
-
         // $results = DB::table('results')
         // ->get();
 
@@ -59,6 +59,7 @@ class ResultController extends Controller
         'users_details.phone_number',
         'users_details.school_name',
         'users_details.occupation_desc',
+        'users_details.newsletter',
         'results.types_id',
         'results.score',
         'results.start_time',
@@ -91,7 +92,8 @@ foreach ($results as $result) {
         'difference' => $result->difference,
         'created_at' => $result->created_at,
         'event_title' => $result->event_title,
-        'type_title' => $result->type_title
+        'type_title' => $result->type_title,
+        'newsletter' => $result->newsletter
     ];
     $count++;
 }
@@ -112,6 +114,7 @@ foreach ($results as $result) {
         'users_details.phone_number',
         'users_details.school_name',
         'users_details.occupation_desc',
+        'users_details.newsletter',
         'results.types_id',
         'results.score',
         'results.start_time',
@@ -143,7 +146,8 @@ foreach ($results as $result) {
         'difference' => $result->difference,
         'created_at' => $result->created_at,
         'event_title' => $result->event_title,
-        'type_title' => $result->type_title
+        'type_title' => $result->type_title,
+        'newsletter' => $result->newsletter
     ];
     $count++;
 }

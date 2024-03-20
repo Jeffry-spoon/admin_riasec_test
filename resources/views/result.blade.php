@@ -49,6 +49,7 @@
                                             <th>Completion Time</th>
                                             <th>Event</th>
                                             <th>Quizzes & Surveys </th>
+                                            <th>Newsletter ? </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -114,6 +115,13 @@
                                                 <td>{{ $result->difference }}</td>
                                                 <td>{{ $result->event_title }}</td>
                                                 <td>{{ $result->type_title }}</td>
+                                                <td>
+                                                    @if($result->newsletter == 1)
+                                                        Yes
+                                                    @else
+                                                        No
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -136,6 +144,7 @@
                                             <th>Completion Time</th>
                                             <th>Event</th>
                                             <th>Quizzes & Surveys </th>
+                                            <th>Newsletter ? </th>
                                         </tr>
                                     </tfoot>
                                 </table>
