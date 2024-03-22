@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ResultController extends Controller
@@ -105,54 +106,67 @@ foreach ($results as $result) {
     }
 
     public function download_pdf() {
-    $mpdf = new \Mpdf\Mpdf();
-    $results = DB::table('results')
-        ->select('users.id',
-        'users.name',
-        'users.email',
-        'users_details.education_level',
-        'users_details.phone_number',
-        'users_details.school_name',
-        'users_details.occupation_desc',
-        'users_details.newsletter',
-        'results.types_id',
-        'results.score',
-        'results.start_time',
-        'results.end_time',
-        'results.difference',
-        'results.created_at',
-        'events.title as event_title',
-        'types.type_name as type_title')
-        ->join('users', 'users.id', '=', 'results.user_id')
-        ->join('users_details', 'users_details.user_id', '=', 'results.user_id')
-        ->join('events', 'events.id', '=', 'results.event_id')
-        ->join('types',  'types.id', '=', 'results.types_id')
-        ->orderBy('results.created_at', 'DESC')
-        ->get();
+  // Inisialisasi objek MPDF
+  $mpdf = new \Mpdf\Mpdf();
 
-        $count = 1;
-        foreach ($results as $result) {
-        $stackings[] = [
-        'name' => $result->name,
-        'email' => $result->email,
-        'education_level' => $result->education_level,
-        'phone_number' => $result->phone_number,
-        'school_name' => $result->school_name,
-        'occupation' => $result->occupation_desc,
-        'typesID' => $result->types_id,
-        'score' => $result->score,
-        'start_time' => $result->start_time,
-        'end_time' => $result->end_time,
-        'difference' => $result->difference,
-        'created_at' => $result->created_at,
-        'event_title' => $result->event_title,
-        'type_title' => $result->type_title,
-        'newsletter' => $result->newsletter
-    ];
-    $count++;
-}
-    $mpdf->WriteHTML(view('components.table.resultTable', ['stackings' => $stackings]));
-    $mpdf->Output('download-pdf-result.pdf ','D');
+  // Ambil data dari database
+  $results = DB::table('results')
+      ->select('users.id',
+      'users.name',
+      'users.email',
+      'users_details.education_level',
+      'users_details.phone_number',
+      'users_details.school_name',
+      'users_details.occupation_desc',
+      'users_details.newsletter',
+      'results.types_id',
+      'results.score',
+      'results.start_time',
+      'results.end_time',
+      'results.difference',
+      'results.created_at',
+      'events.title as event_title',
+      'types.type_name as type_title')
+      ->join('users', 'users.id', '=', 'results.user_id')
+      ->join('users_details', 'users_details.user_id', '=', 'results.user_id')
+      ->join('events', 'events.id', '=', 'results.event_id')
+      ->join('types',  'types.id', '=', 'results.types_id')
+      ->orderBy('results.created_at', 'DESC')
+      ->get();
+
+  $stackings = [];
+  foreach ($results as $result) {
+      $stackings[] = [
+          'name' => $result->name,
+          'email' => $result->email,
+          'education_level' => $result->education_level,
+          'phone_number' => $result->phone_number,
+          'school_name' => $result->school_name,
+          'occupation' => $result->occupation_desc,
+          'typesID' => $result->types_id,
+          'score' => $result->score,
+          'start_time' => $result->start_time,
+          'end_time' => $result->end_time,
+          'difference' => $result->difference,
+          'created_at' => $result->created_at,
+          'event_title' => $result->event_title,
+          'type_title' => $result->type_title,
+          'newsletter' => $result->newsletter
+      ];
+  }
+
+  // Generate HTML view
+  $html = view('components.table.resultTable', ['stackings' => $stackings])->render();
+
+  // Write HTML to PDF
+  $mpdf->WriteHTML($html);
+
+  // Simpan file PDF ke server
+  $filePath = storage_path('app/public/download-pdf-result.pdf');
+  $mpdf->Output($filePath, 'F');
+
+  // Berikan tautan unduh ke pengguna
+  return Response::download($filePath, 'download-pdf-result.pdf');
     }
 
     /**
